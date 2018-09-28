@@ -25,26 +25,23 @@
 
 
   - block:
-    - name: find home directory
-      shell: "echo ~"
-      register: find_home
 
     - name: check for pre-existing miniconda
       stat:
       register: stat_miniconda
       args:
-        path: "{{ find_home.stdout }}/{{ miniconda.path }}"
+        path: "~/{{ miniconda.path }}"
 
     - name: download miniconda
       get_url:
       when: stat_miniconda.stat.isdir is not defined
       args:
         url: "{{ miniconda.url_pre }}/{{ miniconda.installer }}"
-        dest: "{{ find_home.stdout }}/{{ miniconda.installer }}"
+        dest: "~/{{ miniconda.installer }}"
         mode: "{{ miniconda.mode }}"
 
     - name: install miniconda
-      shell: "{{ miniconda.shell}} {{ miniconda.installer }} -b -p {{ find_home.stdout }}/{{ miniconda.path }}"
+      shell: "{{ miniconda.shell}} {{ miniconda.installer }} -b -p ~/{{ miniconda.path }}"
       when: stat_miniconda.stat.isdir is not defined
       args:
         executable: "{{ miniconda.shell }}"
