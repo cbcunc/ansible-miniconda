@@ -25,15 +25,23 @@
 
 
   - block:
+    - name: check for pre-existing miniconda
+      stat:
+      register: stat_miniconda
+      args:
+        path: "{{ miniconda.path }}"
+
     - name: download miniconda
       get_url:
+      when: stat_miniconda.stat.isdir is not defined
       args:
         url: "{{ miniconda.url }}"
         dest: "{{ miniconda.dest }}"
         mode: "{{ miniconda.mode }}"
 
     - name: install miniconda
-      shell: "{{ miniconda.shell}} {{ miniconda.installer}} -b"
+      shell: "{{ miniconda.shell}} {{ miniconda.installer }} -b"
+      when: stat_miniconda.stat.isdir is not defined
       args:
         executable: "{{ miniconda.shell }}"
     become: yes
