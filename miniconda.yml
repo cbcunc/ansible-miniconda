@@ -1,0 +1,42 @@
+---
+
+# Requires ansible>=2.3.0.
+
+- hosts: miniconda_targets
+  vars_files:
+    - variables/miniconda-setup.yml
+  become: yes
+
+  tasks:
+  - name: update all
+    yum:
+    args:
+      name: '*'
+      state: latest
+      skip_broken: yes
+
+  - name: install prereqs
+    yum:
+    args:
+      name:
+        - yum-utils
+        - curl
+        - wget
+
+
+  - block:
+    - name: download miniconda
+      get_url:
+      args:
+        url: "{{ miniconda.url }}"
+        dest: "{{ miniconda.dest }}"
+        mode: "{{ miniconda.mode }}"
+
+    - name: install miniconda
+      shell: "{{ miniconda.shell}} {{ miniconda.installer}} -b"
+      args:
+        executable: "{{ miniconda.shell }}"
+    become: yes
+    become_user: "{{ miniconda.user }}"
+
+...
