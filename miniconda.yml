@@ -41,7 +41,7 @@
 
     - name: install miniconda
       shell: > 
-        "{{ miniconda.shell}}" "{{ miniconda.installer }}" \
+        "{{ miniconda.shell }}" "{{ miniconda.installer }}" \
         -b -p ~/"{{ miniconda.path }}"
       when: stat_miniconda.stat.isdir is not defined
       args:
