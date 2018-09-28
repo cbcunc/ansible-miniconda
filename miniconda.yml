@@ -25,7 +25,6 @@
 
 
   - block:
-
     - name: check for pre-existing miniconda
       stat:
       register: stat_miniconda
@@ -41,7 +40,9 @@
         mode: "{{ miniconda.mode }}"
 
     - name: install miniconda
-      shell: "{{ miniconda.shell}} {{ miniconda.installer }} -b -p ~/{{ miniconda.path }}"
+      shell: > 
+        "{{ miniconda.shell}}" "{{ miniconda.installer }}" \
+        -b -p ~/"{{ miniconda.path }}"
       when: stat_miniconda.stat.isdir is not defined
       args:
         executable: "{{ miniconda.shell }}"
